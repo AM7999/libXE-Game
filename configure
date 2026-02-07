@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+build_pc() {
+    mkdir -p build
+    (cd build && cmake .. -DPLATFORM=PC && make -j16)
+}
+
+build_vita() {
+    mkdir -p build-vita
+    (cd build-vita && cmake .. -DPLATFORM=VITA && make -j16)
+}
+
+case "$1" in
+    a)
+        build_pc
+        build_vita
+        ;;
+    p)
+        build_pc
+        ;;
+    v)
+        build_vita
+        ;;
+    *)
+        echo "Usage: $0 {a|p|v}"
+        exit 1
+        ;;
+esac

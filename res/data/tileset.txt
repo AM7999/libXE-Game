@@ -1,0 +1,6 @@
+# Tileset Definition
+# Format: ID, Name, TexturePath, Walkable, MovementCost
+
+0, grass, res/tile/grass.png, true, 1
+1, stone, res/tile/stone.png, false, 0
+2, water, res/tile/water.png, false, 0

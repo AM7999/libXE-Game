@@ -1,0 +1,10 @@
+#ifndef MACRO_H
+#define MACRO_H
+
+#define DESKTOP_EQUATION_W 16*16*3
+#define DESKTOP_EQUATION_H 16*12*3
+
+#define PSVITA_EQUATION_W 16*16*3
+#define PSVITA_EQUATION_H 16*11*3
+
+#endif
