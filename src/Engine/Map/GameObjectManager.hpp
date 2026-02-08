@@ -1,16 +1,22 @@
-//
-// Created by xenia on 2/7/26.
-//
+#ifndef GAMEOBJECTMANAGER_HPP
+#define GAMEOBJECTMANAGER_HPP
 
-#ifndef GAME_GAMEOBJECTMANAGER_HPP
-#define GAME_GAMEOBJECTMANAGER_HPP
+#include "../Objects/GameObject.hpp"
+#include "../Objects/Tile.hpp"
+#include <vector>
 
 namespace Xenia {
+  class GameObjectManager {
+    public:
+      static void addGameObject(Xenia::GameObject);
+      static void addTile(Xenia::Tile);
 
-class GameObjectManager {
+      static std::vector<GameObject> getGameObjects() {return objects;}
+      static std::vector<Tile> getTiles() {return tiles;}
+    private:
+      static std::vector<GameObject> objects;
+      static std::vector<Tile> tiles;
+  };
+}
 
-};
-
-} // Xenia
-
-#endif //GAME_GAMEOBJECTMANAGER_HPP
+#endif

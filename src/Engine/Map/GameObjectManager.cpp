@@ -1,8 +1,9 @@
-//
-// Created by xenia on 2/7/26.
-//
-
 #include "GameObjectManager.hpp"
 
-namespace Xenia {
-} // Xenia
+void Xenia::GameObjectManager::addGameObject(Xenia::GameObject go) {
+    objects.push_back(go);
+}
+void Xenia::GameObjectManager::addTile(Xenia::Tile tile) {
+    // TODO: actually implement tile methods
+    tiles.push_back(tile);
+}

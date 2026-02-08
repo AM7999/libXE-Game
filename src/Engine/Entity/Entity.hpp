@@ -33,8 +33,6 @@ namespace Xenia {
 
             int sprCtr = 0;
 
-
-
             SDL_FRect rect;
 
             SDL_Renderer* tmpRnd;

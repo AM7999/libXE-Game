@@ -27,8 +27,7 @@ SDL_Texture *Xenia::AssetManager::loadUncompressedTexture(std::string fileName, 
   return tex;
 }
 
-SDL_Texture *
-Xenia::AssetManager::loadCompressedTexture(const std::string &pathToTexture, SDL_Renderer *ren) {
+SDL_Texture* Xenia::AssetManager::loadCompressedTexture(const std::string &pathToTexture, SDL_Renderer *ren) {
   Xenia::Logger::logMessage("Load Texture from: " + pathToTexture);
   int err = 0;
   zip *archive = zip_open(resPack, 0, &err);

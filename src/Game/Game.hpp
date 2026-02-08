@@ -25,7 +25,6 @@ class Game {
     private:
         SDL_Window* window;
         SDL_Renderer* renderer;
-        SDL_GLContext glc;
 
         SDL_Texture* grass;
 

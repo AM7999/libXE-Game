@@ -1,0 +1,9 @@
+{
+    "Objects": [
+        {
+            "name": "key",
+            "space": "xenia",
+            "pathToTex": "res/img/key.png"
+        }
+    ]
+}

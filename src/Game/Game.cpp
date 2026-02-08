@@ -6,8 +6,11 @@
 #include <imgui_impl_sdlrenderer3.h>
 #include <imgui_internal.h>
 
+#include "../include/json.hpp"
+
 #include "../Engine/Objects/GameObject.hpp"
 #include "../Engine/AssetManager/AssetManager.hpp"
+#include "../Engine/Map/GameObjectManager.hpp"
 
 Game::Game() {
     Xenia::Logger::logMessage("Game Started.");
@@ -33,7 +36,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         window = SDL_CreateWindow(title, width, height, flags);
         if(!window) {
-            // throwing an exception is already part of my log error method
             Xenia::Logger::logError(std::string("Game.cpp: 20, SDL_CreateWindow Failed! ") + SDL_GetError(), 1);
         }
         SDL_SetWindowPosition(window, xpos,ypos);
@@ -51,20 +53,23 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         grass = Xenia::AssetManager::loadCompressedTexture("res/tile/grass.png", renderer);
 
+        nlohmann::json j = nlohmann::json::parse(Xenia::AssetManager::loadCompressedData("res/data/objs.json"));
+
+        for (const auto& item : j["Objects"]) {
+            objects.emplace_back(item);
+        }
+
         auto* gameObj = new Xenia::GameObject(48,48, Xenia::AssetManager::loadCompressedTexture("res/img/guy.png", renderer), renderer, "guy", "xenia" ,false);
 
         gameObjects.push_back(gameObj);
 
-
-
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // optional
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
         ImGui::StyleColorsDark();
 
-        // SDL3 + SDL_Renderer3 backends
         ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
         ImGui_ImplSDLRenderer3_Init(renderer);
     }
