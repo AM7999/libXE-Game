@@ -9,7 +9,8 @@
 namespace Xenia {
     class Tile {
         public:
-            Tile(std::string name, SDL_Texture img, bool colidable);
+            // FIX: SDL_Texture is an opaque struct and cannot be passed by value — must be a pointer
+            Tile(std::string name, SDL_Texture* img, bool colidable);
 
             std::string getName() { return name; }
             SDL_Texture* getTexture() { return img; }

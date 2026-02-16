@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../Engine/Entity/Entity.hpp"
+#include "Entity.hpp"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_gamepad.h"
 
@@ -14,6 +14,8 @@ class Player : public Xenia::Entity {
         void update();
         void draw();
     private:
+        int worldX;
+        int worldY;
         SDL_Gamepad* gamepad = nullptr;
         int gamepadDeadzone = 8000; // axis deadzone
 };

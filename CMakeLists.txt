@@ -9,19 +9,14 @@ project(game)
 set(CMAKE_CXX_STANDARD 20)
 
 set(GAME SDL3)
-set(BUILD_TESTS false)
-set(BUILD_EXAMPLES OFF)
-
-# set(PLATFORM PC)
 
 set(CMAKE_CXX_STANDARD 20)
 
 if(PLATFORM STREQUAL "PC")
     add_subdirectory("extern/SDL" SDL3)
-    add_subdirectory("extern/SDL_image" SDL3_Image)
+    add_subdirectory("extern/SDL_image" SDL3_image)
     add_subdirectory("extern/libzip" libzip)
     add_subdirectory("extern/iniparser" iniparser)
-    #add_subdirectory("extern/dylib" dylib)
 endif()
 
 if(GAME STREQUAL "SDL3")
@@ -183,7 +178,6 @@ if(GAME STREQUAL "SDL3")
     endif()
 endif()
 
-
 if(GAME STREQUAL "SDL2")
     file(GLOB_RECURSE GAME_SRC
         "${CMAKE_SOURCE_DIR}/legacy/*.cpp"
@@ -192,14 +186,4 @@ if(GAME STREQUAL "SDL2")
 
     add_executable(${PROJECT_NAME} ${GAME_SRC})
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL0::SDL2 SDL2_image::SDL2_image zip iniparser-shared dylib)
-endif()
-
-if(BUILD_TESTS EQUAL true)
-    add_library(testlib SHARED tests/TestLib.cpp)
-    add_executable(dylib_test tests/Dylib-Main.cpp)
-
-    add_executable(SoundTest tests/Sound-Main.cpp)
-    target_link_libraries(SoundTest SDL3::SDL3)
-
-    target_link_libraries(dylib_test PRIVATE dylib)
 endif()

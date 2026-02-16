@@ -5,6 +5,3 @@ git clone --recursive "https://github.com/libsdl-org/SDL.git" -b "release-3.2.28
 git clone --recursive "https://github.com/libsdl-org/SDL_image.git" -b "release-3.2.4"
 git clone --recursive "https://github.com/nih-at/libzip.git" -b "v1.11.4"
 git clone --recursive "https://github.com/ndevilla/iniparser.git" -b "v4.2.6"
-git clone --recursive "http://nas:3000/AM7999/dylib.git"
-git clone --recursive "https://github.com/nlohmann/json.git"
-git clone --recursive "https://github.com/ljfa-ag/libnbtplusplus" -b "v2.5"

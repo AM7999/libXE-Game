@@ -7,7 +7,8 @@
 #include "../Engine/Debug/Logger.hpp"
 #include "../Engine/Objects/GameObject.hpp"
 #include "../Engine/Save/Config.hpp"
-#include "Player.hpp"
+#include "../Engine/Map/GameObjectManager.hpp"
+#include "../Engine/Entity/Player.hpp"
 #include "SDL3/SDL_video.h"
 
 class Game {
@@ -28,15 +29,12 @@ class Game {
 
         SDL_Texture* grass;
 
-        std::vector<Xenia::GameObject*> gameObjects;
+        // FIX: store a const reference to avoid copying, and match the actual return type
+        const std::vector<Xenia::GameObject*>& gameObjects = Xenia::GameObjectManager::getGameObjects();
 
         Player* player;
 
-        Xenia::GameObject* gObj;
-
         bool isRunning;
-
-        Xenia::GameObject* obj;
 
         bool debug;
 };

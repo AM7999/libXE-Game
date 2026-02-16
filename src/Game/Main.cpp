@@ -15,13 +15,8 @@ int main(int argc, char* argv[]) {
         config.open("config.ini");
         config << Xenia::AssetManager::loadCompressedData("res/data/base_cfg.ini");
         config.close();
-        if(!std::filesystem::exists("config.ini"))
-            Xenia::Logger::logError("i dont even know how you ended up here ngl", 1);
-
         Xenia::Logger::logMessage("Config created!");
-
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Notice", "A config has been created in the game folder. Please Re-open the game", NULL);
-
         return 1;
     }
 
@@ -33,13 +28,9 @@ int main(int argc, char* argv[]) {
     Uint32 frameStart;
     int frameTime;
 
-    #if defined(VITA)
-    // this block is compiled if vita is defined
-        g->init("GAME", 100,100, 16*16*3,6*11*3, false, false);
-    #else
-        g->init("GAME", 100,100, 16*16*3, 16*12*3, false, false);
-    #endif
+    g->init("GAME", 100,100, 16*16*3, 16*12*3, Xenia::Config::getBoolValue("Game", "Fullscreen"), Xenia::Config::getBoolValue("Debug-Ops", "Debug"));
 
+    // Main Game Loop
     while(g->running()) {
         frameStart = SDL_GetTicks();
 

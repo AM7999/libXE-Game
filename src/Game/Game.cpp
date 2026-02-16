@@ -12,6 +12,8 @@
 #include "../Engine/AssetManager/AssetManager.hpp"
 #include "../Engine/Map/GameObjectManager.hpp"
 
+#include "../Engine/Save/NBT.hpp"
+
 Game::Game() {
     Xenia::Logger::logMessage("Game Started.");
 }
@@ -21,6 +23,12 @@ Game::~Game() {
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
 
+
+    NBT::Compound SaveDat;
+    SaveDat.set("xLoc", (int16_t)player->getX());
+    SaveDat.set("yLoc", (int16_t)player->getY());
+    SaveDat.save("testData.bin", "test");
+    
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
@@ -28,6 +36,7 @@ Game::~Game() {
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, bool debug) {
+    this->debug = debug;
     SDL_WindowFlags flags = 0;
     if(fullscreen) {flags = SDL_WINDOW_FULLSCREEN;}
 
@@ -55,21 +64,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
         nlohmann::json j = nlohmann::json::parse(Xenia::AssetManager::loadCompressedData("res/data/objs.json"));
 
-        for (const auto& item : j["Objects"]) {
-            objects.emplace_back(item);
-        }
-
-        auto* gameObj = new Xenia::GameObject(48,48, Xenia::AssetManager::loadCompressedTexture("res/img/guy.png", renderer), renderer, "guy", "xenia" ,false);
-
-        gameObjects.push_back(gameObj);
-
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
         ImGui::StyleColorsDark();
-
         ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
         ImGui_ImplSDLRenderer3_Init(renderer);
     }
@@ -98,61 +97,59 @@ void Game::update() {
 }
 
 void Game::draw() {
+    SDL_RenderClear(renderer);
+
+    for(Xenia::GameObject* g : gameObjects) {
+        g->draw();
+    }
+
+    player->draw();
+
     ImGui_ImplSDLRenderer3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    bool showEx = false;
-
+    // ** Debug
     ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_MenuBar);
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Show example window.")) { showEx = true; }
-            if (ImGui::MenuItem("Attempt Save.", "Ctrl+S")) { Xenia::Logger::logWarning("Not implemented"); }
-            if (ImGui::MenuItem("Quit.", "Ctrl+Q")) { isRunning = false; }
+            if (ImGui::MenuItem("Attempt Save.")) { Xenia::Logger::logWarning("Not implemented"); }
+            if (ImGui::MenuItem("Quit.")) { isRunning = false; }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
     }
-
     ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
     ImGui::Text("plrY: %d", player->getY());
     ImGui::Text("plrX: %d", player->getX());
-
     ImGui::End();
+    // ** End Debug
 
     static int selectedIndex = -1;
 
+    // ** Object View
     ImGui::Begin("Object View");
-    for (size_t i = 0; i < gameObjects.size(); i++)
-    {
+    for (size_t i = 0; i < gameObjects.size(); i++) {
         std::string label = gameObjects[i]->getSpace() + ":" + gameObjects[i]->getName();
-
         if (ImGui::Selectable(label.c_str(), selectedIndex == (int)i)) {
-            selectedIndex = i;  // Update selection
+            selectedIndex = i;
         }
-        // Show image of selected object (outside the loop, every frame)
-        if (selectedIndex >= 0 && selectedIndex < (int)gameObjects.size()) {
-
-            ImGui::Separator();
-            ImGui::Text("Selected Object:");
-            ImGui::Image((ImTextureID)(intptr_t)gameObjects[selectedIndex]->getImg(),
-                         ImVec2(48.0f, 48.0f));
-            ImGui::Text("Position: %.1f, %.1f\nInteractable: %s", gameObjects[selectedIndex]->getX(), gameObjects[selectedIndex]->getY(), gameObjects[selectedIndex]->isInteractable() ? "Yes" : "No");
-        }
-        ImGui::End();
-
-        SDL_RenderClear(renderer);
-
-        for (size_t i = 0; i < gameObjects.size(); i++) {
-            gameObjects[i]->draw();
-        }
-
-        player->draw();
-
-        ImGui::Render();
-        ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
-
-        SDL_RenderPresent(renderer);
     }
+    // FIX: selected object display and ImGui::End were inside the loop — moved outside
+    if (selectedIndex >= 0 && selectedIndex < (int)gameObjects.size()) {
+        ImGui::Separator();
+        ImGui::Text("Selected Object:");
+        ImGui::Image((ImTextureID)(intptr_t)gameObjects[selectedIndex]->getImg(), ImVec2(48.0f, 48.0f));
+        ImGui::Text("Position: %.1f, %.1f\nInteractable: %s",
+            gameObjects[selectedIndex]->getX(),
+            gameObjects[selectedIndex]->getY(),
+            gameObjects[selectedIndex]->isInteractable() ? "Yes" : "No");
+    }
+    ImGui::End();
+
+    // FIX: Render and RenderDrawData were inside the loop — must only be called once per frame
+    ImGui::Render();
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+
+    SDL_RenderPresent(renderer);
 }

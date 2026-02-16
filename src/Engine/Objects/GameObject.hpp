@@ -27,7 +27,7 @@ namespace Xenia {
       float x = 0;
       float y = 0;
 
-      SDL_FRect rect = {x,y, 48, 48};
+      SDL_FRect rect;
 
       SDL_Texture* img;
       SDL_Renderer* rnd;

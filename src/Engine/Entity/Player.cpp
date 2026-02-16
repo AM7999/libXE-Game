@@ -1,5 +1,5 @@
 #include "Player.hpp"
-#include "../Engine/Debug/Logger.hpp"
+#include "../Debug/Logger.hpp"
 #include <string>
 #include <SDL3/SDL_gamepad.h>
 

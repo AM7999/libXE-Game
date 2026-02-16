@@ -8,14 +8,16 @@
 namespace Xenia {
   class GameObjectManager {
     public:
-      static void addGameObject(Xenia::GameObject);
-      static void addTile(Xenia::Tile);
+      // FIX: parameters changed from const ref to pointer, matching the .cpp and the stored type
+      static void addGameObject(Xenia::GameObject* go);
+      static void addTile(Xenia::Tile* tile);
 
-      static std::vector<GameObject> getGameObjects() {return objects;}
-      static std::vector<Tile> getTiles() {return tiles;}
+      // FIX: return const reference to avoid copying the vector on every call
+      static const std::vector<GameObject*>& getGameObjects() { return objects; }
+      static const std::vector<Tile*>& getTiles() { return tiles; }
     private:
-      static std::vector<GameObject> objects;
-      static std::vector<Tile> tiles;
+      static std::vector<GameObject*> objects;
+      static std::vector<Tile*> tiles;
   };
 }
 

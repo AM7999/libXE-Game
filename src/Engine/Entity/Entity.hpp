@@ -9,6 +9,7 @@
 namespace Xenia {
     class Entity {
         public:
+            virtual ~Entity() = default;
             int getX() {return this->x;}
             int getY() {return this->y;}
         protected:
